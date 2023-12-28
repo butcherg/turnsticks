@@ -1,0 +1,22 @@
+srcdir=%SRCDIR%/
+CC=%HOST%-g++
+PROG1=turnsticks
+EXT=%EXT%
+
+CXXFLAGS=-ggdb -fpermissive -I. -I.. 
+LIBS=
+
+WXDIR=%WXDIR%
+WXFLAGS=$(shell ${WXDIR}/wx-config --cxxflags)
+WXLIBS=$(shell ${WXDIR}/wx-config --libs)
+
+all: ${PROG1}
+
+${PROG1}: ${PROG1}.o 
+	$(CC) -o ${PROG1} ${PROG1}.o $(WXLIBS) $(LIBS)
+
+${PROG1}.o: ${srcdir}${PROG1}.cpp
+	$(CC) $(WXFLAGS) $(CXXFLAGS) -o ${PROG1}.o -c ${srcdir}${PROG1}.cpp 
+
+clean:
+	rm -f *.o ${PROG1}${EXT}

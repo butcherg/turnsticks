@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#set -x
+
+#from https://stackoverflow.com/a/246128
+#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+#echo $SCRIPT_DIR
+
+#also from https://stackoverflow.com/a/246128
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+SRCDIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+#parse command line arguments, right now just --host=...
+for var in "$@"
+do
+	NV=(${var/=/ })
+	if [ "${NV[0]}" == "--host" ]; then HOST="${NV[1]}"; fi 
+	if [ "${NV[0]}" == "--wxdir" ]; then WXDIR="${NV[1]}"; fi
+done
+
+if [[ $HOST = *mingw* ]]; then EXT=".exe"; fi
+
+#copy the Makefile from the srcdir to here:
+cp $SRCDIR/Makefile.in Makefile
+
+#do the %...% replacements
+SRCDIR=${SRCDIR//\//\\/}
+sed -i "s/%SRCDIR%/$SRCDIR/" Makefile
+
+WXDIR=${WXDIR//\//\\/}
+sed -i "s/%WXDIR%/$WXDIR/" Makefile
+
+sed -i "s/%HOST%/$HOST/" Makefile
+sed -i "s/%EXT%/$EXT/" Makefile
+
+echo "#!/bin/bash" > configure.sh
+echo "$0 $@" >> configure.sh
+chmod 755 configure.sh
