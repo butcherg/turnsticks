@@ -14,7 +14,11 @@ The notation convention for a dimension is "n.nnn (turns/ticks)".
 
 ## Building
 
-Currently, the only way to get the program is to download the code and compile it.  This requires 1) a compiler, and 2) the wxWidgets GUI library.  For Linux, the gcc compiler available in most distributions is sufficient, but the build system requires downloading wxWidget sources and compiling them separately.  After thes prerequisites are met, the easiest way to get the code is to clone this repository:
+The only prerequisite software is wxWidgets, a cross-platform GUI library.  For Debian/Ubuntu:
+
+    $ sudo apt install libwxgtk3.0-gtk3-dev
+
+After the prerequisite is met, the easiest way to get the code is to clone this repository:
 
     $ git clone https://github.com/butcherg/turnsticks.git
 
@@ -23,7 +27,7 @@ then doing the following:
     $ cd turnsticks
     $ mkdir build
     $ cd build
-    $ ../configure --wxdir=(path to the wxWidgets build directory)
+    $ cmake ..
     $ make
 
 This will make an executable in the build directory you can run like this:
@@ -31,8 +35,6 @@ This will make an executable in the build directory you can run like this:
     $ ./turnsticks
 
 For Windows, I recommend installing the MSYS2 environment to do this, emulates a bash shell and provides a full package library in Windows.
-
-Yes, I plan to post a binary release soon, Windows only...
 
 ## License
 
